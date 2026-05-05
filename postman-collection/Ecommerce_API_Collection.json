@@ -1,0 +1,300 @@
+{
+  "info": {
+    "_postman_id": "eddb1282-47ca-43ee-af83-9309f57f76e4",
+    "name": "E-commerce API Testing",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "54307103",
+    "_collection_link": "https://go.postman.co/collection/54307103-eddb1282-47ca-43ee-af83-9309f57f76e4?source=collection_link"
+  },
+  "item": [
+    {
+      "name": "Authorization",
+      "item": [
+        {
+          "name": "Valid_Login",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "//Check status code is 200\r",
+                  "pm.test(\"Status code is 200\", function () {\r",
+                  "    pm.response.to.have.status(200);\r",
+                  "});\r",
+                  "\r",
+                  "//Check status code is 200 (another method)\r",
+                  "pm.test(\"Status code is 200\", function () {\r",
+                  "    pm.expect(pm.response.code).to.eql(200);\r",
+                  "});\r",
+                  "\r",
+                  "//Check response status is \"OK\"\r",
+                  "pm.test(\"Status is OK\", function () {\r",
+                  "    pm.expect(pm.response.status).to.eql(\"OK\");\r",
+                  "});\r",
+                  "\r",
+                  "//Check response time is less than 500ms\r",
+                  "pm.test(\"Response time is less than 500ms\", function () {\r",
+                  "    pm.expect(pm.response.responseTime).to.be.below(500)\r",
+                  "});\r",
+                  "\r",
+                  "//Set response JSON body in variable for further use\r",
+                  "var jsonData = pm.response.json();\r",
+                  "\r",
+                  "//Check token is present in response\r",
+                  "pm.test(\"Token is present in response\", function () {\r",
+                  "    pm.expect(jsonData.token).to.not.be.null\r",
+                  "});\r",
+                  "\r",
+                  "//Set token in environment variable for further use\r",
+                  "pm.environment.set(\"token\", jsonData.token);"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "apikey",
+              "apikey": [
+                {
+                  "key": "value",
+                  "value": "reqres_4df1c8206df54aeaa43e88c46fcc3389",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "x-api-key",
+                "value": "reqres_4df1c8206df54aeaa43e88c46fcc3389",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"email\": \"eve.holt@reqres.in\", \"password\": \"cityslicka\"}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{BaseURL_Users}}/login",
+              "host": [
+                "{{BaseURL_Users}}"
+              ],
+              "path": [
+                "login"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Invalid_Login",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "//Check status code is 400\r",
+                  "pm.test(\"Status code is 400\", function () {\r",
+                  "    pm.response.to.have.status(400);\r",
+                  "});\r",
+                  "\r",
+                  "//Set response JSON body in variable for further use\r",
+                  "var jsonData = pm.response.json();\r",
+                  "\r",
+                  "//Check response body contains error message\r",
+                  "pm.test(\"Response body contains error message\", function () {\r",
+                  "    pm.expect(jsonData.error).to.eql(\"Missing email or username\");\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "apikey",
+              "apikey": [
+                {
+                  "key": "value",
+                  "value": "reqres_4df1c8206df54aeaa43e88c46fcc3389",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "x-api-key",
+                "value": "reqres_4df1c8206df54aeaa43e88c46fcc3389",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"email\": \"eve.holt@reqres.in\"}"
+            },
+            "url": {
+              "raw": "{{BaseURL_Users}}/login",
+              "host": [
+                "{{BaseURL_Users}}"
+              ],
+              "path": [
+                "login"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Get All Products",
+      "item": [
+        {
+          "name": "Get_Products",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "//Check response body is not null\r",
+                  "pm.test(\"Response body is not null\", function () {\r",
+                  "    pm.expect(pm.response.json.length).to.be.greaterThan(0)\r",
+                  "});\r",
+                  "\r",
+                  "//Check response has property title and price\r",
+                  "pm.test(\"Check response has property title and price\", function () {\r",
+                  "    pm.expect(pm.response.json()[0]).to.have.property(\"title\");\r",
+                  "    pm.expect(pm.response.json()[0]).to.have.property(\"price\");\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{BaseURL_Stores}}/products",
+              "host": [
+                "{{BaseURL_Stores}}"
+              ],
+              "path": [
+                "products"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "New Cart",
+      "item": [
+        {
+          "name": "New_Cart",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n\"id\": 1,\r\n\"userId\": 1,\r\n\"products\": [\r\n{}\r\n]\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{BaseURL_Stores}}/carts",
+              "host": [
+                "{{BaseURL_Stores}}"
+              ],
+              "path": [
+                "carts"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Update Cart",
+      "item": [
+        {
+          "name": "Update_Cart",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Order created successfully\", function () {\r",
+                  "    pm.response.to.have.status(200);\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"Order ID exists\", function () {\r",
+                  "    var jsonData = pm.response.json();\r",
+                  "    pm.expect(jsonData.id).to.exist;\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"userId\": 1,\r\n  \"date\": \"2020-02-03\",\r\n  \"products\": [\r\n    {\r\n      \"productId\": 1,\r\n      \"quantity\": 2\r\n    }\r\n  ]\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{BaseURL_Stores}}/carts/11",
+              "host": [
+                "{{BaseURL_Stores}}"
+              ],
+              "path": [
+                "carts",
+                "11"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    }
+  ]
+}
